@@ -1,0 +1,133 @@
+#include<stdlib.h>
+#include<string>
+#include<iostream>
+#include<ctime>
+#include<windows.h>
+#include<conio.h>
+#include <sstream>
+#include<stdio.h>
+using namespace std;
+char price[500];
+char fileName[500];
+void DouStr(double freq1)
+{   
+    ostringstream oss1;
+    oss1<<freq1;
+    memset(fileName,0,500);
+//先转化为流，再转换为string,然后再转换为char
+    strcat(fileName,(oss1.str()).c_str());
+    //int t=strlen(fileName);
+    // for(int i=0;i<t;++i)
+    // {
+    //     cout<<fileName[i];
+    // }
+    // cout<<endl;
+}
+
+void HugeNumber(char aaa[500],char bbb[500])//价钱的计算大数加减
+{
+    int i,tb,ta;
+    //scanf("%s %s", a, b) == 2; //输入两个数
+    ta = strlen(aaa);
+    int tr1 = strlen(aaa);
+    for (i = 0; i < tr1; i++) //找出小数点的位置
+        if (aaa[i] == '.')
+        {
+            ta = i;
+            break;
+        }
+    tb=strlen(bbb);
+    int tr2=strlen(bbb);
+    for(i=0;i<tr2;i++)
+    if(bbb[i]=='.')
+    {
+        tb=i;
+        break;
+    }
+    int ia=ta+1,ib=tb+1,zhs[500],xs[500],c,j,e;
+    memset(xs,0,sizeof(xs));//表示小数点后的数字
+    memset(zhs,0,sizeof(zhs));//表示整数
+    ta--;tb--;
+    i=j=0;
+    while(1)//计算整数的和
+    {
+        if(ta>=0)
+        {zhs[i]+=aaa[ta]-'0';ta--;}
+        if(tb>=0)
+        {zhs[i]+=bbb[tb]-'0';tb--;}
+        i++;         //i表示整数位的长度
+        if(ta<0&&tb<0)
+        break;
+    }
+    while(1)//计算出小数点的数之和
+    {
+        if(ia<tr1)
+        {xs[j]+=aaa[ia]-'0';ia++;}
+        if(ib<tr2)
+        {xs[j]+=bbb[ib]-'0';ib++;}
+        j++;         //j表示小数点后数的长度
+
+        if(ia>=tr1&&ib>=tr2)
+        break;
+    }
+    c=0;
+    for(e=j-1;e>=0;e--)//开始进位
+    {
+        xs[e]+=c;
+        c=xs[e]/10;
+        xs[e]%=10;
+    }
+    for(e=0;e<i;e++)
+    {
+        zhs[e]+=c;
+        c=zhs[e]/10;
+        zhs[e]%=10;
+    }
+    if(c)
+    {
+        zhs[e]+=c;i++;
+    }
+    for(e=j-1;e>=0;e--)//去掉无意义的零
+    if(xs[e])
+    break;
+    else
+    j--;
+    for(e=i-1;e>=0;e--)
+    if(zhs[e])
+    break;
+    else
+    i--;
+    int jj = 0;
+    for(e=i-1;e>=0;e--)//输出两数字的和
+    {
+        price[jj] = zhs[e]+'0';
+        jj++;
+    } //printf("%d",zhs[e]);
+    if(j>0)//如果小数点后有数字则输出小数点
+    //printf(".");
+    { 
+        price[jj] = '.';
+        jj++;}
+        for(e=0;e<j;e++){
+        price[jj] = xs[e]+'0';
+        jj++;
+        }
+    if(j<=0&&i<=0){//当两个数都为零时上面的不会输出，则输出零
+        price[jj] = '0';
+        jj++;
+    }
+}
+int main(){
+    memset(price,0,sizeof(price));
+    //out << price << endl;
+    double freq1;
+    char bb[500];
+    cin >> freq1;
+    DouStr(freq1);
+    //cout << fileName;
+    cin>>bb;
+    //cout << bb;
+    HugeNumber(bb, fileName);
+    cout << price;
+    return 0;
+}
